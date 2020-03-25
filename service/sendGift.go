@@ -39,6 +39,8 @@ type UserCoin struct {
 func SendGiftService(send *SendGift) (ret Ret, sendError error) {
 	// 从池里获取连接
 	rc := util.RedisClient.Get()
+	// 用完后将连接放回连接池
+	defer rc.Close()
 	pidstr := strconv.Itoa(os.Getpid())
 	//分布式锁
 	lockName := getString(common.DistLock, send.UserId, send.GetUserId)
@@ -100,8 +102,6 @@ func SendGiftService(send *SendGift) (ret Ret, sendError error) {
 	} else {
 		rc.Do("ZIncrBy", key, send.Coin, sign)
 	}
-	// 用完后将连接放回连接池
-	defer rc.Close()
 	ret.Code = 0
 	ret.Msg = "success"
 	return ret, sendError
