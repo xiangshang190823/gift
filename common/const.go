@@ -3,7 +3,7 @@ package common
 const (
 	GIFT           = "gift"
 	UNDERLINE      = "_"
-	DistLock       = "distLock"
+	Lock           = "lock"
 	ParameterError = "Url Param 'userId' is missing"
 
 	InsertDataError = "Data insertion failed"

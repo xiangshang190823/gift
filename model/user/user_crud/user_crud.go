@@ -23,8 +23,8 @@ type LogMgr struct {
 }
 
 var (
-	G_logMgr *LogMgr
-	Client   *mongo.Client
+	GLogMgr *LogMgr
+	Client  *mongo.Client
 )
 
 func init() {
@@ -47,7 +47,7 @@ func init() {
 	collection = client.Database("test").Collection("user")
 
 	//单例
-	G_logMgr = &LogMgr{
+	GLogMgr = &LogMgr{
 		client:     client,
 		collection: collection,
 	}

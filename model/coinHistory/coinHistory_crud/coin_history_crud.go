@@ -7,7 +7,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"gopkg.in/mgo.v2/bson"
-	"log"
 	"time"
 )
 
@@ -25,8 +24,8 @@ type LogMgr struct {
 }
 
 var (
-	G_logMgr *LogMgr
-	Client   *mongo.Client
+	GLogMgr *LogMgr
+	Client  *mongo.Client
 )
 
 type Ret struct {
@@ -52,13 +51,13 @@ func init() {
 	ctx, _ = context.WithTimeout(context.Background(), time.Duration(2000)*time.Millisecond) // ctx
 	opts = options.Client().ApplyURI("mongodb://localhost:27017").SetMaxPoolSize(10)         // opts
 	if client, err = mongo.Connect(ctx, opts); err != nil {
-		log.Fatal(err)
+		errors.New(err.Error())
 		return
 	}
 	//2.链接数据库和表
 	collection = client.Database("test").Collection("coin_history")
 	//3.赋值单例
-	G_logMgr = &LogMgr{
+	GLogMgr = &LogMgr{
 		client:     client,
 		collection: collection,
 	}
@@ -67,8 +66,7 @@ func init() {
 //保存数据
 func (logMgr *LogMgr) SaveCoinHistory(history *CoinHistory) (err error) {
 	if _, err = logMgr.collection.InsertOne(context.TODO(), &history); err != nil {
-		errors.New(common.InsertDataError + err.Error())
-		return
+		return errors.New(common.InsertDataError + err.Error())
 	}
 	return
 }

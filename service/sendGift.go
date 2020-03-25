@@ -41,22 +41,22 @@ func SendGiftService(send *SendGift) (ret Ret, sendError error) {
 	rc := util.RedisClient.Get()
 	// 用完后将连接放回连接池
 	defer rc.Close()
-	pidstr := strconv.Itoa(os.Getpid())
+	pidStr := strconv.Itoa(os.Getpid())
 	//分布式锁
-	lockName := getString(common.DistLock, send.UserId, send.GetUserId)
+	lockName := getString(common.Lock, send.UserId, send.GetUserId)
 	_, err := redis.String(rc.Do("GET", lockName))
 	if err == nil {
 		//fmt.Println(err)
 		return
 	}
-	rc.Do("SETNX", lockName, pidstr)
+	rc.Do("SETNX", lockName, pidStr)
 	rc.Do("EXPIRE", lockName, 10)
 	//1.查询送礼用户的信息，并查看这个金额是否大于他自己的金额
-	error, user := user_crud.G_logMgr.SelectMongodbByUserId(send.UserId)
+	error, user := user_crud.GLogMgr.SelectMongodbByUserId(send.UserId)
 	if error != nil {
 		errors.New("user does not exist")
 	}
-	err, toUser := user_crud.G_logMgr.SelectMongodbByUserId(send.GetUserId)
+	err, toUser := user_crud.GLogMgr.SelectMongodbByUserId(send.GetUserId)
 	if err != nil {
 		errors.New("toUser does not exist")
 	}
@@ -66,14 +66,14 @@ func SendGiftService(send *SendGift) (ret Ret, sendError error) {
 		errors.New("您的金币不够哟!请充值后再赠送")
 	}
 	//1.2用户赠送，删减金币数
-	err1 := user_crud.G_logMgr.UpdateCoin(*user, -send.Coin)
+	err1 := user_crud.GLogMgr.UpdateCoin(*user, -send.Coin)
 	if err1 != nil {
 		errors.New("用户删除金币失败")
 	}
 	//2.增加金币数
-	err2 := user_crud.G_logMgr.UpdateCoin(*toUser, send.Coin)
+	err2 := user_crud.GLogMgr.UpdateCoin(*toUser, send.Coin)
 	if err2 != nil {
-		user_crud.G_logMgr.UpdateCoin(*user, send.Coin)
+		user_crud.GLogMgr.UpdateCoin(*user, send.Coin)
 	}
 
 	//2.5生成对应的redis key，规则是gift_主播Id
@@ -87,13 +87,13 @@ func SendGiftService(send *SendGift) (ret Ret, sendError error) {
 	//历史记录ID:来源+用户ID+日期时间戳
 	coinHistory.HistoryId = getString(common.GIFT, user.UserId, strconv.FormatInt(time.Now().Unix(), 10))
 	coinHistory.Time = time.Now()
-	err3 := coinHistory_crud.G_logMgr.SaveCoinHistory(coinHistory)
+	err3 := coinHistory_crud.GLogMgr.SaveCoinHistory(coinHistory)
 
 	if err3 != nil {
-		user_crud.G_logMgr.UpdateCoin(*toUser, -send.Coin)
-		user_crud.G_logMgr.UpdateCoin(*user, send.Coin)
+		user_crud.GLogMgr.UpdateCoin(*toUser, -send.Coin)
+		user_crud.GLogMgr.UpdateCoin(*user, send.Coin)
 	}
-	rc.Do("Del", common.DistLock+send.UserId+send.GetUserId)
+	rc.Do("Del", common.Lock+send.UserId+send.GetUserId)
 	//4.增加redis zset数据
 	sign := getString(user.UserName, common.UNDERLINE, user.UserId)
 
@@ -110,17 +110,21 @@ func SendGiftService(send *SendGift) (ret Ret, sendError error) {
 func GetSortGift(userId string) (ret Ret, sortError error) {
 	var userCoin *UserCoin
 	var buffer bytes.Buffer
+	//得到redis的key
 	buffer.WriteString(common.GIFT)
 	buffer.WriteString(common.UNDERLINE)
 	buffer.WriteString(userId)
 	key := buffer.String()
+	//获取连接
 	rc := util.RedisClient.Get()
+	defer rc.Close()
 	userMap, err := redis.StringMap(rc.Do("zrevrange", key, 0, -1, "withscores"))
 	if err != nil {
 		errors.New("redis get failed")
 	}
 	userCoin = &UserCoin{}
 	var i int64 = 0
+	//将map循环放入切片中
 	for user := range userMap {
 		userCoin.UserName = strings.Split(user, common.UNDERLINE)[0]
 		userCoin.UserId = strings.Split(user, common.UNDERLINE)[1]
@@ -135,7 +139,7 @@ func GetSortGift(userId string) (ret Ret, sortError error) {
 }
 
 func GiftList(userId string, pageNo int64, pageSize int64) interface{} {
-	return coinHistory_crud.G_logMgr.SelectMongodb(userId, pageNo, pageSize)
+	return coinHistory_crud.GLogMgr.SelectMongodb(userId, pageNo, pageSize)
 }
 
 func (s a) Len() int { return len(s) }

@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b505e43f-6651-4ad3-a5cf-60a0ddbdcd41" name="Default Changelist" comment="" />
+    <list default="true" id="b505e43f-6651-4ad3-a5cf-60a0ddbdcd41" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/const.go" beforeDir="false" afterPath="$PROJECT_DIR$/common/const.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/coinHistory/coinHistory_crud/coin_history_crud.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/coinHistory/coinHistory_crud/coin_history_crud.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/user/user_crud/user_crud.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/user/user_crud/user_crud.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/sendGift.go" beforeDir="false" afterPath="$PROJECT_DIR$/service/sendGift.go" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -15,6 +23,9 @@
     </option>
   </component>
   <component name="GOROOT" path="D:\Go" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="ProjectId" id="1ZVilPJYkdPGDR6zQKVEDpmyQYa" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -24,6 +35,7 @@
   <component name="PropertiesComponent">
     <property name="DefaultGoTemplateProperty" value="Go File" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="configurable.Global.GOPATH.is.expanded" value="true" />
     <property name="configurable.Module.GOPATH.is.expanded" value="false" />
@@ -133,5 +145,9 @@
       <screen x="0" y="0" width="1549" height="831" />
     </state>
     <state x="398" y="0" width="752" height="831" key="find.popup/0.0.1549.831@0.0.1549.831" timestamp="1584932538787" />
+    <state x="437" y="152" width="672" height="678" key="search.everywhere.popup" timestamp="1585106688530">
+      <screen x="0" y="0" width="1549" height="831" />
+    </state>
+    <state x="437" y="152" width="672" height="678" key="search.everywhere.popup/0.0.1549.831@0.0.1549.831" timestamp="1585106688530" />
   </component>
 </project>
