@@ -41,7 +41,7 @@ func SaveMongodb() (err error) {
 		&User{UserName: "用户3", UserId: "10003", Status: 1, UserCoin: 1520},
 		&User{UserName: "用户4", UserId: "10004", Status: 1, UserCoin: 358})
 	if _, err = GLogMgr.Collection.InsertMany(context.TODO(), users); err != nil {
-		err = errors.New(common.InsertDataError)
+		err = errors.New(common.INSERT_DATA_ERROR)
 		return
 	}
 	return
@@ -62,7 +62,7 @@ func UpdateCoin(user User, coin float32) (err error) {
 	defer GLogMgr.Client.Disconnect(context.TODO())
 	if singleResult := GLogMgr.Collection.FindOneAndUpdate(ctx, bson.M{"user_id": user.UserId, "user_coin": user.UserCoin},
 		bson.M{"$inc": bson.M{"user_coin": coin}}); singleResult.Err() != nil {
-		errors.New(common.UpdateDataError)
+		errors.New(common.UPDATE_DATA_ERROR)
 		return
 	}
 	return

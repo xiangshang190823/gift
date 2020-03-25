@@ -1,11 +1,11 @@
 package common
 
 const (
-	GIFT           = "gift"
-	UNDERLINE      = "_"
-	Lock           = "lock"
-	ParameterError = "Url Param 'userId' is missing"
+	Gift            = "gift"
+	Underline       = "_"
+	Lock            = "lock"
+	PARAMETER_ERROR = "Url Param 'userId' is missing"
 
-	InsertDataError = "Data insertion failed"
-	UpdateDataError = "Data update failed"
+	INSERT_DATA_ERROR = "Data insertion failed"
+	UPDATE_DATA_ERROR = "Data update failed"
 )

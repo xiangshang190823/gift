@@ -3,10 +3,10 @@ package service
 import (
 	"bytes"
 	"errors"
-	"gift/common"
-	"gift/model/coinHistory/coinHistory_crud"
-	"gift/model/user/user_crud"
-	"gift/util"
+	"Gift/common"
+	"Gift/model/coinHistory/coinHistory_crud"
+	"Gift/model/user/user_crud"
+	"Gift/util"
 	"github.com/garyburd/redigo/redis"
 	"os"
 	"sort"
@@ -76,8 +76,8 @@ func SendGiftService(send *SendGift) (ret Ret, sendError error) {
 		user_crud.UpdateCoin(*user, send.Coin)
 	}
 
-	//2.5生成对应的redis key，规则是gift_主播Id
-	key := strings.Join([]string{common.GIFT, toUser.UserId}, common.UNDERLINE)
+	//2.5生成对应的redis key，规则是Gift_主播Id
+	key := strings.Join([]string{common.Gift, toUser.UserId}, common.Underline)
 
 	//3.增加流水记录
 	coinHistory := new(coinHistory_crud.CoinHistory)
@@ -85,7 +85,7 @@ func SendGiftService(send *SendGift) (ret Ret, sendError error) {
 	coinHistory.Coin = send.Coin
 	coinHistory.GetUserId = toUser.UserId
 	//历史记录ID:来源+用户ID+日期时间戳
-	coinHistory.HistoryId = getString(common.GIFT, user.UserId, strconv.FormatInt(time.Now().Unix(), 10))
+	coinHistory.HistoryId = getString(common.Gift, user.UserId, strconv.FormatInt(time.Now().Unix(), 10))
 	coinHistory.Time = time.Now()
 	err3 := coinHistory_crud.SaveCoinHistory(coinHistory)
 
@@ -95,7 +95,7 @@ func SendGiftService(send *SendGift) (ret Ret, sendError error) {
 	}
 	rc.Do("Del", common.Lock+send.UserId+send.GetUserId)
 	//4.增加redis zset数据
-	sign := getString(user.UserName, common.UNDERLINE, user.UserId)
+	sign := getString(user.UserName, common.Underline, user.UserId)
 
 	if _, e := rc.Do("ZREVRANK", key, user.UserId); e != nil {
 		rc.Do("zadd", key, send.Coin, sign)
@@ -111,8 +111,8 @@ func GetSortGift(userId string) (ret Ret, sortError error) {
 	var userCoin *UserCoin
 	var buffer bytes.Buffer
 	//得到redis的key
-	buffer.WriteString(common.GIFT)
-	buffer.WriteString(common.UNDERLINE)
+	buffer.WriteString(common.Gift)
+	buffer.WriteString(common.Underline)
 	buffer.WriteString(userId)
 	key := buffer.String()
 	//获取连接
@@ -126,8 +126,8 @@ func GetSortGift(userId string) (ret Ret, sortError error) {
 	var i int64 = 0
 	//将map循环放入切片中
 	for user := range userMap {
-		userCoin.UserName = strings.Split(user, common.UNDERLINE)[0]
-		userCoin.UserId = strings.Split(user, common.UNDERLINE)[1]
+		userCoin.UserName = strings.Split(user, common.Underline)[0]
+		userCoin.UserId = strings.Split(user, common.Underline)[1]
 		v1, _ := strconv.ParseFloat(userMap[user], 32)
 		userCoin.CostCoin = float32(v1)
 		ret.Data = append(ret.Data, *userCoin)

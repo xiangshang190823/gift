@@ -39,7 +39,7 @@ func init() {
 func SaveCoinHistory(history *CoinHistory) (err error) {
 	defer GLogMgr.Client.Disconnect(context.TODO())
 	if _, err = GLogMgr.Collection.InsertOne(context.TODO(), &history); err != nil {
-		return errors.New(common.InsertDataError + err.Error())
+		return errors.New(common.INSERT_DATA_ERROR + err.Error())
 	}
 	return
 }

@@ -30,7 +30,7 @@ func GetSortGift(writer http.ResponseWriter, request *http.Request) {
 	query := request.URL.Query()
 	userId := query.Get("userId")
 	if len(userId) < 1 {
-		errors.New(common.ParameterError)
+		errors.New(common.PARAMETER_ERROR)
 	}
 	var s = make([]byte, 5, 10)
 	map1, _ := service.GetSortGift(userId)
@@ -47,7 +47,7 @@ func GiftList(writer http.ResponseWriter, request *http.Request) {
 	var pn int64
 	var ps int64
 	if len(userId) < 1 {
-		errors.New(common.ParameterError)
+		errors.New(common.PARAMETER_ERROR)
 	}
 	if len(pageNo) < 1 {
 		pn = 1

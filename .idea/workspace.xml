@@ -2,11 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b505e43f-6651-4ad3-a5cf-60a0ddbdcd41" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/util/mongodb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/const.go" beforeDir="false" afterPath="$PROJECT_DIR$/common/const.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/coinHistory/coinHistory_crud/coin_history_crud.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/coinHistory/coinHistory_crud/coin_history_crud.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/user/user_crud/user_crud.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/user/user_crud/user_crud.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reqHandle/gift_handle.go" beforeDir="false" afterPath="$PROJECT_DIR$/reqHandle/gift_handle.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/service/sendGift.go" beforeDir="false" afterPath="$PROJECT_DIR$/service/sendGift.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util/mongodb.go" beforeDir="false" afterPath="$PROJECT_DIR$/util/mongodb.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

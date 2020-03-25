@@ -1,10 +1,10 @@
 package util
 
 import (
-	"context"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
-	"time"
+"context"
+"go.mongodb.org/mongo-driver/mongo"
+"go.mongodb.org/mongo-driver/mongo/options"
+"time"
 )
 
 type LogMgr struct {
