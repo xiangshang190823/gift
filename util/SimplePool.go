@@ -36,6 +36,7 @@ func NewSimplePoll(workers int) *SimplePool {
 	}
 	return p
 }
+
 // 添加任务
 func (p *SimplePool) Add(fn func()) {
 	p.work <- fn
