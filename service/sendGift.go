@@ -52,28 +52,28 @@ func SendGiftService(send *SendGift) (ret Ret, sendError error) {
 	rc.Do("SETNX", lockName, pidStr)
 	rc.Do("EXPIRE", lockName, 10)
 	//1.查询送礼用户的信息，并查看这个金额是否大于他自己的金额
-	error, user := user_crud.GLogMgr.SelectMongodbByUserId(send.UserId)
+	error, user := user_crud.SelectMongodbByUserId(send.UserId)
 	if error != nil {
-		errors.New("user does not exist")
+		sendError = errors.New("user does not exist")
 	}
-	err, toUser := user_crud.GLogMgr.SelectMongodbByUserId(send.GetUserId)
+	err, toUser := user_crud.SelectMongodbByUserId(send.GetUserId)
 	if err != nil {
-		errors.New("toUser does not exist")
+		sendError = errors.New("toUser does not exist")
 	}
 
 	//1.1.如果大于，则扣减需要送礼的用户的金币，否则提示失败
 	if send.Coin > user.UserCoin {
-		errors.New("您的金币不够哟!请充值后再赠送")
+		sendError = errors.New("您的金币不够哟!请充值后再赠送")
 	}
 	//1.2用户赠送，删减金币数
-	err1 := user_crud.GLogMgr.UpdateCoin(*user, -send.Coin)
+	err1 := user_crud.UpdateCoin(*user, -send.Coin)
 	if err1 != nil {
-		errors.New("用户删除金币失败")
+		sendError = errors.New("用户删除金币失败")
 	}
 	//2.增加金币数
-	err2 := user_crud.GLogMgr.UpdateCoin(*toUser, send.Coin)
+	err2 := user_crud.UpdateCoin(*toUser, send.Coin)
 	if err2 != nil {
-		user_crud.GLogMgr.UpdateCoin(*user, send.Coin)
+		user_crud.UpdateCoin(*user, send.Coin)
 	}
 
 	//2.5生成对应的redis key，规则是gift_主播Id
@@ -87,11 +87,11 @@ func SendGiftService(send *SendGift) (ret Ret, sendError error) {
 	//历史记录ID:来源+用户ID+日期时间戳
 	coinHistory.HistoryId = getString(common.GIFT, user.UserId, strconv.FormatInt(time.Now().Unix(), 10))
 	coinHistory.Time = time.Now()
-	err3 := coinHistory_crud.GLogMgr.SaveCoinHistory(coinHistory)
+	err3 := coinHistory_crud.SaveCoinHistory(coinHistory)
 
 	if err3 != nil {
-		user_crud.GLogMgr.UpdateCoin(*toUser, -send.Coin)
-		user_crud.GLogMgr.UpdateCoin(*user, send.Coin)
+		user_crud.UpdateCoin(*toUser, -send.Coin)
+		user_crud.UpdateCoin(*user, send.Coin)
 	}
 	rc.Do("Del", common.Lock+send.UserId+send.GetUserId)
 	//4.增加redis zset数据
@@ -120,7 +120,7 @@ func GetSortGift(userId string) (ret Ret, sortError error) {
 	defer rc.Close()
 	userMap, err := redis.StringMap(rc.Do("zrevrange", key, 0, -1, "withscores"))
 	if err != nil {
-		errors.New("redis get failed")
+		sortError = errors.New("redis get failed")
 	}
 	userCoin = &UserCoin{}
 	var i int64 = 0
@@ -139,7 +139,7 @@ func GetSortGift(userId string) (ret Ret, sortError error) {
 }
 
 func GiftList(userId string, pageNo int64, pageSize int64) interface{} {
-	return coinHistory_crud.GLogMgr.SelectMongodb(userId, pageNo, pageSize)
+	return coinHistory_crud.SelectMongodb(userId, pageNo, pageSize)
 }
 
 func (s a) Len() int { return len(s) }
